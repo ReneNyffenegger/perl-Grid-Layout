@@ -1,2 +1,3 @@
-# perl-Grid-Layout
-Perl module Grid::Layout
+# Perl module Grid::Layout
+
+Create grid based layouts.
