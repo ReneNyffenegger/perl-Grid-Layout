@@ -40,9 +40,19 @@ sub new { #_{
 #_{ POD
 =head2 new
 
+    my $line = Grid::Layout::Line->new($V_or_H);
+
+This function should not be called by a user. It is called by L<< Grid::Layout/_add_line >>.
+
 =cut
 #_}
 
+  my $class  = shift;
+  my $V_or_H = shift;
+
+  my $self = {};
+  bless $self, $class;
+  return $self;
 
 } #_}
 #_}

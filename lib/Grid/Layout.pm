@@ -13,6 +13,7 @@ use utf8;
 use Carp;
 
 use Grid::Layout::Cell;
+use Grid::Layout::Line;
 use Grid::Layout::Track;
  #_}
 our $VERSION = 0.01;
@@ -65,7 +66,9 @@ sub _init_V_or_H { #_{
     $self->_init_V_or_H('V');
     $self->_init_V_or_H('H');
 
-This method is called by L</new> twice, once for the vertical and once for the horizontal components of the layout.
+This method is called by L</new> twice to initialize the vertical and the horizontal components of the layout.
+
+The parameter C<'V'> or C<'H'> indiciates which componenents to initialize.
 
 =cut
 #_}
@@ -74,7 +77,7 @@ This method is called by L</new> twice, once for the vertical and once for the h
   my $V_or_H = shift;
 
   $self->{$V_or_H}{tracks} = [];
-# $self->{$V_or_H}{lines } = [];
+  $self->{$V_or_H}{lines } = [];
 
 } #_}
 sub add_vertical_track { #_{
@@ -95,7 +98,7 @@ sub add_vertical_track { #_{
 
 } #_}
 sub add_horizontal_track { #_{
-#_{ add_vertical_track
+#_{ POD
 =head2 add_horizontal_track
 
 =cut
@@ -116,9 +119,31 @@ sub _add_track { #_{
 
   my $new_track = Grid::Layout::Track->new($self);
 
+  $self->_add_line($V_or_H) unless @{$self->{$V_or_H}->{tracks}}; # An extra line (the first one) needs to be added for the first vertical and horizontal track.
+  $self->_add_line($V_or_H);
+
   push @{$self->{$V_or_H}{tracks}}, $new_track;
+
+
   return $new_track;
 
+} #_}
+sub _add_line { #_{
+#_{ POD
+=head2 _add_line
+
+    $self->_add_line($V_or_H);
+
+Internal function, called by L</_add_track>, to add a vertical or horizontal L<< Grid::Layout::Line >>.
+
+=cut
+#_}
+
+  my $self   = shift;
+  my $V_or_H = shift;
+
+  push @{$self->{$V_or_H}->{lines}}, Grid::Layout::Line->new($self);
+  
 } #_}
 sub size_x { #_{
 #_{ POD
