@@ -1,8 +1,9 @@
 use strict;
 use warnings;
 
-use Test::Simple tests => 107;
+use Test::Simple tests => 108;
 use Test::More;
+use Test::Exception;
 
 use Grid::Layout;
 
@@ -214,5 +215,4 @@ is($gl->cell($track_v_vwx, $track_h_E)->{area}, $area_5);
 #      +------+------+------+------+------+------+------+------+
 #
 
-
-
+throws_ok { $gl->area($track_v_def, $track_h_G, $track_v_jkl, $track_h_G) } qr{cell 3/6 already belongs to an area};
