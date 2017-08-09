@@ -12,7 +12,7 @@ use utf8;
 
 use Carp;
  #_}
-our $VERSION = 0.01;
+our $VERSION = $Grid::Layout::VERSION;
 #_{ Synopsis
 
 =head1 SYNOPSIS
@@ -166,6 +166,17 @@ sub area { #_{
 #_{ POD
 =head2 area
 
+    
+    my $track_v      = $gl->add_vertical_track(…);
+    my $track_h_from = $gl->add_horizontal_track(…);
+    my $track_h_to   = $gl->add_horizontal_track(…);
+
+    my $area = $track_v->area($track_h_from, $track_h_to);
+
+Defines an L<< area|Grid::Layout::Area >> lying on C<< $track_v >> between C<< $track_h_from >> and C<< $track_h_to >>.
+
+An area that is bound by four tracks can be created with L<< Grid::Layout/area >>.
+
 =cut
 #_}
 
@@ -192,10 +203,12 @@ sub area { #_{
 #_{ POD: Copyright
 
 =head1 Copyright
+
 Copyright © 2017 René Nyffenegger, Switzerland. All rights reserved.
 This program is free software; you can redistribute it and/or modify it
 under the terms of the the Artistic License (2.0). You may obtain a
 copy of the full license at: L<http://www.perlfoundation.org/artistic_license_2_0>
+
 =cut
 
 #_}

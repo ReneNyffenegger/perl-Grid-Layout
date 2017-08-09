@@ -17,7 +17,7 @@ use Grid::Layout::Cell;
 use Grid::Layout::Line;
 use Grid::Layout::Track;
  #_}
-our $VERSION = 0.01;
+our $VERSION = 0.02;
 #_{ Synopsis
 
 =head1 SYNOPSIS
@@ -164,7 +164,10 @@ sub area { #_{
     my $area = $gl->area($vertical_track_from, $horizontal_track_from, $vertical_track_to, $vertical_track_to);
 
 
-Define an L<< Area|Grid::Layout::Area >> bound by the four Tracks;
+Define an L<< area|Grid::Layout::Area >> bound by the four Tracks;
+
+An area that lies on I<one> L<< track|Grid::Layout::Track >> only can be created with
+L<< Grid::Layout::Track/area >>.
 
 =cut
 #_}
@@ -392,10 +395,12 @@ Static method. Returns C<'V'> if passed C<'H'> and vice versa.
 #_{ POD: Copyright
 
 =head1 Copyright
+
 Copyright © 2017 René Nyffenegger, Switzerland. All rights reserved.
 This program is free software; you can redistribute it and/or modify it
 under the terms of the the Artistic License (2.0). You may obtain a
 copy of the full license at: L<http://www.perlfoundation.org/artistic_license_2_0>
+
 =cut
 
 #_}
