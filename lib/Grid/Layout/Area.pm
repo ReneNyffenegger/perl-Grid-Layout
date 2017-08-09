@@ -41,9 +41,32 @@ sub new { #_{
 #_{ POD
 =head2 new
 
+
 =cut
 #_}
 
+  my $class        = shift;
+  my $track_v_from = shift;
+  my $track_h_from = shift;
+  my $track_v_to   = shift;
+  my $track_h_to   = shift;
+
+  croak 'track_v_from is not a Grid::Layout::Track' unless $track_v_from->isa('Grid::Layout::Track');
+  croak 'track_v_to   is not a Grid::Layout::Track' unless $track_v_to  ->isa('Grid::Layout::Track');
+  croak 'track_h_from is not a Grid::Layout::Track' unless $track_h_from->isa('Grid::Layout::Track');
+  croak 'track_h_to   is not a Grid::Layout::Track' unless $track_h_to  ->isa('Grid::Layout::Track');
+
+  croak 'track_v_from is not a vertical' unless $track_v_from->{V_or_H} eq 'V';
+  croak 'track_v_to   is not a vertical' unless $track_v_to  ->{V_or_H} eq 'V';
+  croak 'track_h_from is not a vertical' unless $track_h_from->{V_or_H} eq 'H';
+  croak 'track_h_to   is not a vertical' unless $track_h_to  ->{V_or_H} eq 'H';
+
+  my $self  = {};
+
+  bless $self, $class;
+
+
+  return $self;
 
 } #_}
 #_}

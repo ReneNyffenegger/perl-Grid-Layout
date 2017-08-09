@@ -1,10 +1,10 @@
 #_{ Encoding and name
 =encoding utf8
 =head1 NAME
-Grid::Layout - Create grid based layouts.
+Grid::Layout::LineSection
 =cut
 #_}
-package Grid::Layout;
+package Grid::Layout::LineSection;
 #_{ use …
 use warnings;
 use strict;
@@ -12,21 +12,27 @@ use utf8;
 
 use Carp;
 
-use Grid::Layout::Area;
-use Grid::Layout::Cell;
-use Grid::Layout::Line;
-use Grid::Layout::Track;
+use Grid::Layout;
+
  #_}
-our $VERSION = 0.01;
+our $VERSION = $Grid::Layout::VERSION;
 #_{ Synopsis
 
 =head1 SYNOPSIS
+
+C<< Grid::Layout::LineSection >>
 
 =cut
 #_}
 #_{ Description
 
 =head1 DESCRIPTION
+
+Except for those C<< Grid::Layout::LineSection >>s that make up the border of the entire Grid, each LineSection lies between
+two adjacent L<< Grid::Layout::Cell >>s.
+
+A L<< Grid::Layout::Line >> is made up of C<< Grid::Layout::Line >>s
+
 =cut
 #_}
 #_{ Methods
@@ -38,26 +44,22 @@ sub new { #_{
 #_{ POD
 =head2 new
 
-    use Grid::Layout;
-
-    my $gl = Grid::Layout->new();
 
 =cut
 #_}
 
 
-  my $class = shift;
+  my $class     = shift;
+# my $grid_line = shift;
+
+# croak 'Grid::Layout required' unless $grid_layout->isa('Grid::Layout');
 
   my $self = {};
 
+# $self->{grid_layout} = $grid_layout;
+
   bless $self, $class;
 
-  $self->_init_V_or_H('V');
-  $self->_init_V_or_H('H');
-
-  $self->{cells} = [];
-
-  return $self;
 
 } #_}
 sub _init_V_or_H { #_{
@@ -151,58 +153,6 @@ Internal function, called by L</_add_track>, to add a vertical or horizontal L<<
   push @{$self->{$V_or_H}->{lines}}, Grid::Layout::Line->new($self);
 
 } #_}
-sub area { #_{
-#_{ POD
-=head2 area
-
-    my $vertical_track_from   = $gl->add_vertical_track(…);
-    my $horizontal_track_from = $gl->add_vertical_track(…);
-
-    my $vertical_track_to     = $gl->add_vertical_track(…);
-    my $horizontal_track_to   = $gl->add_vertical_track(…);
-
-    my $area = $gl->area($vertical_track_from, $horizontal_track_from, $vertical_track_to, $vertical_track_to);
-
-
-Define an L<< Area|Grid::Layout::Area >> bound by the four Tracks;
-
-=cut
-#_}
-  
-  my $self = shift;
-
-  my $track_v_from = shift;
-  my $track_h_from = shift;
-  my $track_v_to   = shift;
-  my $track_h_to   = shift;
-
-  croak 'track_v_from is not a Grid::Layout::Track' unless $track_v_from->isa('Grid::Layout::Track');
-  croak 'track_v_to   is not a Grid::Layout::Track' unless $track_v_to  ->isa('Grid::Layout::Track');
-  croak 'track_h_from is not a Grid::Layout::Track' unless $track_h_from->isa('Grid::Layout::Track');
-  croak 'track_h_to   is not a Grid::Layout::Track' unless $track_h_to  ->isa('Grid::Layout::Track');
-
-  croak 'track_v_from is not a vertical' unless $track_v_from->{V_or_H} eq 'V';
-  croak 'track_v_to   is not a vertical' unless $track_v_to  ->{V_or_H} eq 'V';
-  croak 'track_h_from is not a vertical' unless $track_h_from->{V_or_H} eq 'H';
-  croak 'track_h_to   is not a vertical' unless $track_h_to  ->{V_or_H} eq 'H';
-
-  for my $x ($track_v_from->{position} .. $track_v_to->{position}) {
-  for my $y ($track_h_from->{position} .. $track_h_to->{position}) {
-    if ($self->cell($x, $y)->{area}) {
-       croak "cell $x/$y already belongs to an area";
-    }
-  }}
-
-  my $area = Grid::Layout::Area->new($track_v_from, $track_h_from, $track_v_to, $track_h_to);
-
-  for my $x ($track_v_from->{position} .. $track_v_to->{position}) {
-  for my $y ($track_h_from->{position} .. $track_h_to->{position}) {
-    $self->cell($x, $y)->{area}= $area;
-  }}
-
-  return $area;
-
-} #_}
 sub size_x { #_{
 #_{ POD
 =head2 size_x
@@ -264,13 +214,9 @@ sub cell { #_{
 #_{ POD
 =head2 cell
 
-    my $track_v = $gl->add_vertical_track(…);
-    my $track_h = $gl->add_horizontal_track(…);
+    my $cell = $gl->cell($v, $x);
 
-    my $cell_1 = $gl->cell($x, $y);
-    my $cell_2 = $gl->cell($track_v, $track_h);
-
-Return the L<< Grid::Layout::Cell >> at horizontal position C<$x> and vertical position C<$y> or where C<$track_v> and C<$track_h> intersects.
+Return the L<< Grid::Layout::Cell >> at horizontal position C<$x> and vertical position C<$y>.
 
 =cut
 #_}
@@ -278,25 +224,6 @@ Return the L<< Grid::Layout::Cell >> at horizontal position C<$x> and vertical p
   my $self = shift;
   my $x    = shift;
   my $y    = shift;
-
-  unless ($x =~ /^\d+$/) {
-    if ($x->isa('Grid::Layout::Track')) {
-      croak '$x is not a vertical track' unless $x->{V_or_H} eq 'V';
-      $x = $x->{position};
-    }
-    else {
-      croak '$x neither number nor Grid::Layout::Track';
-    }
-  }
-  unless ($y =~ /^\d+$/) {
-    if ($y->isa('Grid::Layout::Track')) {
-      croak '$y is not a vertical track' unless $y->{V_or_H} eq 'H';
-      $y = $y->{position};
-    }
-    else {
-      croak '$y neither number nor Grid::Layout::Track';
-    }
-  }
 
   return $self->{cells}->[$x][$y];
 
@@ -368,26 +295,6 @@ Returns the C<< $position >>th line in vertical or horizontal direction.
   return ${$self->{$V_or_H}->{lines}}[$position];
 
 } #_}
-sub VH_opposite { #_{
-#_{ POD
-=head2 VH_opposite
-
-    my $o1 = Grid::Layout::VH_opposite('H');
-    my $02 = Grid::Layout::VH_opposite('V');
-
-Static method. Returns C<'V'> if passed C<'H'> and vice versa.
-
-=cut
-#_}
-
-  my $V_or_H = shift;
-
-  return 'H' if $V_or_H eq 'V';
-  return 'V' if $V_or_H eq 'H';
-
-  croak "$V_or_H is neither H nor V";
-
-} #_}
 #_}
 #_{ POD: Copyright
 
@@ -401,3 +308,4 @@ copy of the full license at: L<http://www.perlfoundation.org/artistic_license_2_
 #_}
 
 'tq84';
+

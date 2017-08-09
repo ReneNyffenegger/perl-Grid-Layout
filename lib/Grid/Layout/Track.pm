@@ -37,18 +37,129 @@ sub new { #_{
 #_{ POD
 =head2 new
 
+Creates a C<< Grid::Layout::Track >>. Should not be called by the user.
+The constructor is called by L<< Grid::Layout/add_track >> instead.
+
 =cut
 #_}
 
   my $class       = shift;
   my $grid_layout = shift;
+  my $V_or_H      = shift;
+  my $position    = shift;
+
+  croak 'Grid::Layout expected' unless $grid_layout->isa('Grid::Layout');
+  croak 'V or H expected'       unless $V_or_H eq 'V' or $V_or_H eq 'H';
+  croak 'position not a number' unless $position =~ /^\d+$/;
 
   my $self        = {};
 
-  croak 'Grid::Layout expected' unless $grid_layout->isa('Grid::Layout');
+  $self -> {grid_layout} = $grid_layout;
+  $self -> {V_or_H     } = $V_or_H;
+  $self -> {position   } = $position;
+
 
   bless $self, $class;
   return $self;
+
+} #_}
+#_{ line_...
+sub line_left { #_{
+#_{ POD
+=head2 line_left
+
+Returns the line to the left of the track.
+
+Only applicable if the track is vertical (C<< $self->{V_or_H} eq 'V' >>).
+
+=cut
+#_}
+
+  my $self = shift;
+
+  croak 'Type of track is not vertical' unless $self->{V_or_H} eq 'V';
+
+  return $self->{grid_layout}->line_x($self->{position});
+
+} #_}
+sub line_right { #_{
+#_{ POD
+=head2 line_right
+
+Returns the line to the right of the track.
+
+Only applicable if the track is vertical (C<< $self->{V_or_H} eq 'V' >>).
+
+=cut
+#_}
+
+  my $self = shift;
+
+  croak 'Type of track is not vertical' unless $self->{V_or_H} eq 'V';
+
+  return $self->{grid_layout}->line_x($self->{position} + 1);
+
+} #_}
+sub line_above { #_{
+#_{ POD
+=head2 line_left
+
+Returns the line above the track.
+
+Only applicable if the track is vertical (C<< $self->{V_or_H} eq 'H' >>).
+
+=cut
+#_}
+
+  my $self = shift;
+
+  croak 'Type of track is not horizontal' unless $self->{V_or_H} eq 'H';
+
+  return $self->{grid_layout}->line_y($self->{position});
+
+} #_}
+sub line_beneath { #_{
+#_{ POD
+=head2 line_beneath
+
+Returns the line beneath the track.
+
+Only applicable if the track is vertical (C<< $self->{V_or_H} eq 'H' >>).
+
+=cut
+#_}
+
+  my $self = shift;
+
+  croak 'Type of track is not horizontal' unless $self->{V_or_H} eq 'H';
+
+  return $self->{grid_layout}->line_y($self->{position} + 1);
+} #_}
+#_}
+sub area { #_{
+#_{ POD
+=head2 area
+
+=cut
+#_}
+
+  my $self       = shift;
+  my $track_from = shift;
+  my $track_to   = shift;
+
+  croak '$track_from must be a Grid::Layout::Track' unless $track_from->isa('Grid::Layout::Track');
+  croak '$track_to   must be a Grid::Layout::Track' unless $track_to  ->isa('Grid::Layout::Track');
+
+  croak '$track_from must be other direction' unless $track_from->{V_or_H} eq Grid::Layout::VH_opposite($self->{V_or_H});
+  croak '$track_from must be other direction' unless $track_to  ->{V_or_H} eq Grid::Layout::VH_opposite($self->{V_or_H});
+
+  if ($self->{V_or_H} eq 'V') {
+    return $self->{grid_layout}->area($self, $track_from, $self, $track_to);
+  }
+  else {
+    return $self->{grid_layout}->area($track_from, $self, $track_to, $self);
+  }
+
 
 } #_}
 #_}
@@ -64,6 +175,3 @@ copy of the full license at: L<http://www.perlfoundation.org/artistic_license_2_
 #_}
 
 'tq84';
-
-
-
