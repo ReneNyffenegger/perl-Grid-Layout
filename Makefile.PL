@@ -18,7 +18,9 @@ WriteMakefile(
     PREREQ_PM => {
     },
     BUILD_REQUIRES => {
-        'Test::Simple' => 0,
+        'Test::More'      => 0,
+        'Test::Files'     => 0,
+        'Test::Exception' => 0,
     },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES => 'Grid-Layout-*' },

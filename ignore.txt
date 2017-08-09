@@ -2,3 +2,5 @@ Makefile
 Makefile.old
 blib/
 Grid-Layout-*.tar.gz
+t/02-grid-gotten.html
+MANIFEST.bak
