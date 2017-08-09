@@ -1,11 +1,13 @@
 use strict;
 use warnings;
 
-use Test::Simple tests => 108;
+use Test::Simple tests => 275;
 use Test::More;
 use Test::Exception;
+use Test::Files;
 
 use Grid::Layout;
+use Grid::Layout::Render;
 
 is(Grid::Layout::VH_opposite('V'), 'H', 'Opposite of V is H');
 is(Grid::Layout::VH_opposite('H'), 'V', 'Opposite of H is V');
@@ -109,8 +111,29 @@ my $track_v_vwx= $gl->add_vertical_track();
 is($gl->size_x,  8, 'size_x =  8');
 is($gl->size_y, 10, 'size_y = 10');
 
+
 is(scalar @{$gl->{V}->{lines}}, 9, '9 vertical lines');
 is(scalar @{$gl->{H}->{lines}},11, '11 horizontal lines');
+
+my @cells;
+my $cnt;
+@cells = $track_h_C->cells();
+is(scalar @cells, 8);
+$cnt = 0;
+for my $c (@cells) {
+  isa_ok($c, 'Grid::Layout::Cell');
+  is($c->x, $cnt++);
+  is($c->y, 2);
+}
+
+@cells = $track_v_vwx->cells();
+is(scalar @cells, 10);
+$cnt = 0;
+for my $c (@cells) {
+  isa_ok($c, 'Grid::Layout::Cell');
+  is($c->x, 7);
+  is($c->y, $cnt++);
+}
 
 my $line_h_03_beneath = $track_h_C->line_beneath();
 my $line_h_04_above   = $track_h_D->line_above();
@@ -215,4 +238,72 @@ is($gl->cell($track_v_vwx, $track_h_E)->{area}, $area_5);
 #      +------+------+------+------+------+------+------+------+
 #
 
+is($area_2->x_from, 1);
+is($area_2->x_to  , 1);
+is($area_2->y_from, 2);
+is($area_2->y_to  , 5);
+
+is($area_5->x_from, 4);
+is($area_5->x_to  , 7);
+is($area_5->y_from, 4);
+is($area_5->y_to  , 6);
+
+is($area_3->width , 3);
+is($area_3->height, 1);
+
 throws_ok { $gl->area($track_v_def, $track_h_G, $track_v_jkl, $track_h_G) } qr{cell 3/6 already belongs to an area};
+
+my $text = '';
+my $rendered = Grid::Layout::Render::top_to_bottom_left_to_right(
+  $gl,
+  sub {
+    my $track_h = shift;
+    isa_ok($track_h, 'Grid::Layout::Track');
+    is($track_h->{V_or_H}, 'H');
+    $text .= "<tr>";
+  },
+  sub {
+     my $cell = shift;
+
+     isa_ok($cell, 'Grid::Layout::Cell');
+
+     if (my $area = $cell->{area}) {
+
+       if ($area->x_from == $cell->x and $area->y_from == $cell->y) {
+         my $width  = $area->width;
+         my $height = $area->height;
+
+         $text .= "<td colspan='$width' rowspan='$height'>";
+         $text .= $cell->x . '/' . $cell->y . ' (' . $width . 'x' . $height . ')';
+         $text .= "</td>";
+
+       }
+
+
+     }
+     else {
+       $text .= "<td>";
+       $text .= $cell->x . '/' . $cell->y;
+       $text .= "</td>";
+     }
+
+  },
+  sub {
+     $text .= "\n</tr>";
+  }
+);
+
+open (my $out, '>', 't/02-grid-gotten.html');
+print $out "<html>
+
+<table border=1>
+
+$text
+
+</table>
+
+</html>
+";
+close $out;
+
+compare_ok('t/02-grid-gotten.html', 't/02-grid-expected.html');

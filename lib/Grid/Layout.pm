@@ -314,7 +314,7 @@ Internal use.
   my $x    = shift;
   my $y    = shift;
 
-  $self->{cells}->[$x][$y] = Grid::Layout::Cell->new($self);
+  $self->{cells}->[$x][$y] = Grid::Layout::Cell->new($self, $x, $y);
 
 } #_}
 sub line_x { #_{

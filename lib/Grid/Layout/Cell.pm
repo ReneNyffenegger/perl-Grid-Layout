@@ -45,15 +45,35 @@ sub new { #_{
 
 
   my $class       = shift;
+
   my $grid_layout = shift;
+  my $x           = shift;
+  my $y           = shift;
+
+  croak 'Grid::Layout expected' unless $grid_layout->isa('Grid::Layout'       );
+  croak 'Number expected'       unless $x =~ /^\d+/;
+  croak 'Number expected'       unless $y =~ /^\d+/;
+
   my $self        = {};
 
-  croak 'Grid::Layout expected' unless $grid_layout->isa('Grid::Layout');
+  $self->{grid_layout} = $grid_layout;
+  $self->{x          } = $x;
+  $self->{y          } = $y;
 
   bless $self, $class;
   return $self;
 
 } #_}
+#_{ x/y
+sub x { #_{
+  my $self = shift;
+  return $self->{x};
+} #_}
+sub y { #_{
+  my $self = shift;
+  return $self->{y};
+} #_}
+#_}
 #_}
 #_{ POD: Copyright
 
@@ -67,5 +87,3 @@ copy of the full license at: L<http://www.perlfoundation.org/artistic_license_2_
 #_}
 
 'tq84';
-
-

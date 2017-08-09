@@ -63,12 +63,86 @@ sub new { #_{
 
   my $self  = {};
 
-  bless $self, $class;
+  $self->{track}{'V'}{from} = $track_v_from;
+  $self->{track}{'V'}{to  } = $track_v_to  ;
+  $self->{track}{'H'}{from} = $track_h_from;
+  $self->{track}{'H'}{to  } = $track_h_to  ;
 
+  bless $self, $class;
 
   return $self;
 
 } #_}
+#_{ x/y_from/to
+sub x_from { #_{
+#_{ POD
+=head2 x_from
+
+=cut
+#_}
+
+  my $self = shift;
+
+  return $self->{track}{V}{from}->{position};
+}
+#_}
+sub x_to { #_{
+#_{ POD
+=head2 x_to
+
+=cut
+#_}
+
+  my $self = shift;
+
+  return $self->{track}{V}{to}->{position};
+}
+#_}
+sub y_from { #_{
+#_{ POD
+=head2 y_from
+
+=cut
+#_}
+
+  my $self = shift;
+
+  return $self->{track}{H}{from}->{position};
+}
+#_}
+sub y_to { #_{
+#_{ POD
+=head2 y_to
+
+=cut
+#_}
+
+  my $self = shift;
+
+  return $self->{track}{H}{to}->{position};
+}
+#_}
+#_}
+#_{ width/height
+sub width { #_{
+#_{ POD
+=head2 width
+
+=cut
+#_}
+  my $self = shift;
+  return $self->x_to - $self->x_from+1;
+} #_}
+sub height { #_{
+#_{ POD
+=head2 height
+
+=cut
+#_}
+  my $self = shift;
+  return $self->y_to - $self->y_from +1;
+} #_}
+#_}
 #_}
 #_{ POD: Copyright
 
@@ -82,5 +156,3 @@ copy of the full license at: L<http://www.perlfoundation.org/artistic_license_2_
 #_}
 
 'tq84';
-
-

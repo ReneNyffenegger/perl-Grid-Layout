@@ -63,7 +63,7 @@ The constructor is called by L<< Grid::Layout/add_track >> instead.
   return $self;
 
 } #_}
-#_{ line_...
+#_{ line_left/right/above/beneath
 sub line_left { #_{
 #_{ POD
 =head2 line_left
@@ -136,6 +136,32 @@ Only applicable if the track is vertical (C<< $self->{V_or_H} eq 'H' >>).
   return $self->{grid_layout}->line_y($self->{position} + 1);
 } #_}
 #_}
+sub cells { #_{
+#_{ POD
+=head2 cells
+
+    my @cells = $track->cells();
+
+Return an array of the L<< cells|Grid::Layout::Cell >> in the track.
+
+=cut
+#_}
+
+  my $self = shift;
+
+  my @ret=();
+  for my $p (0 .. $self->{grid_layout}->_size(Grid::Layout::VH_opposite($self->{V_or_H}))-1) {
+    if ($self->{V_or_H} eq 'V') {
+      push @ret, $self->{grid_layout}->cell($self->{position}, $p);
+    }
+    else {
+      push @ret, $self->{grid_layout}->cell($p, $self->{position});
+    }
+  }
+
+  return @ret;
+
+} #_}
 sub area { #_{
 #_{ POD
 =head2 area
