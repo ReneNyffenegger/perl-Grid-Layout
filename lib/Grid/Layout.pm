@@ -88,9 +88,13 @@ sub add_vertical_track { #_{
 #_{ POD
 =head2 add_vertical_track
 
-    my $track_v = $gl->add_vertical_track(…);
+    my  $track_v           = $gl->add_vertical_track(…);
+    my ($track_v, $line_v) = $gl->add_vertical_track(…);
 
 Adds a L<< vertical track|Grid::Layout::Track >> on the right side of the grid and returns it.
+
+If called in I<list context>, it returns the newly created L<Grid::Layout::Track> and L<Grid::Layout::Line>.
+Otherwise, it returns the newly created L<Grid::Layout::Track>.
 
 =cut
 #_}
@@ -108,9 +112,13 @@ sub add_horizontal_track { #_{
 #_{ POD
 =head2 add_horizontal_track
 
-    my $track_h = $gl->add_horizontal_track(…);
+    my  $track_h           = $gl->add_horizontal_track(…);
+    my ($track_h, $line_h) = $gl->add_horizontal_track(…);
 
 Adds a L<< horizontal track|Grid::Layout::Track >> at the bottom of the grid and returns it.
+
+If called in I<list context>, it returns the newly created L<Grid::Layout::Track> and L<Grid::Layout::Line>.
+Otherwise, it returns the newly created L<Grid::Layout::Track>.
 
 =cut
 #_}
@@ -121,7 +129,7 @@ Adds a L<< horizontal track|Grid::Layout::Track >> at the bottom of the grid and
     $self->_add_cell($x, $y);
   }
 
-  return $self->_add_track('H');
+  return ($self->_add_track('H'));
 
 } #_}
 #_}
@@ -154,11 +162,12 @@ Internal function. Returns a vertical or horizontal L<< track|Grid::Layout::Trac
   my $new_track = Grid::Layout::Track->new($self, $V_or_H, scalar @{$self->{$V_or_H}->{tracks}});
 
 # $self->_add_line($V_or_H) unless @{$self->{$V_or_H}->{tracks}}; # An extra line (the first one) needs to be added for the first vertical and horizontal track.
-  $self->_add_line($V_or_H);
+  my $new_line = $self->_add_line($V_or_H);
 
   push @{$self->{$V_or_H}{tracks}}, $new_track;
 
-  return $new_track;
+  return ($new_track, $new_line) if wantarray;
+  return  $new_track;
 
 } #_}
 sub _add_line { #_{
@@ -175,7 +184,11 @@ Internal function, called by L</_add_track>, to add a vertical or horizontal L<<
   my $self   = shift;
   my $V_or_H = shift;
 
-  push @{$self->{$V_or_H}->{lines}}, Grid::Layout::Line->new($self);
+  my $new_line = Grid::Layout::Line->new($self, $V_or_H);
+
+  push @{$self->{$V_or_H}->{lines}}, $new_line;
+
+  return $new_line;
 
 } #_}
 sub area { #_{

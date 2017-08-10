@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::Simple tests => 275;
+use Test::Simple tests => 277;
 use Test::More;
 use Test::Exception;
 use Test::Files;
@@ -50,15 +50,19 @@ my $track_h_B    = $gl->add_horizontal_track();
                  is(scalar @{$gl->{V}->{lines}}, 1, '1 vertical lines');
                  is(scalar @{$gl->{H}->{lines}}, 3, '3 horizontal lines');
                  is($track_h_B->{position}, 1, '$track_h_B->{position} == 1');
-my $track_h_C  = $gl->add_horizontal_track();
+my ($track_h_C,
+    $line_h_C)   = $gl->add_horizontal_track();
                  isa_ok($track_h_C, 'Grid::Layout::Track', '$track_h_C is a Grid::Layout::Track');
+                 isa_ok($line_h_C , 'Grid::Layout::Line' , '$line_h_C  is a Grid::Layout::Line' );
                  is($gl->size_x, 0, 'gl size_x is 3');
                  is($gl->size_y, 3, 'gl size_y is 0');
                  $cell = $gl->cell(0, 0); is($cell, undef, 'cell 0.0 is undefined');
                  is(scalar @{$gl->{V}->{lines}}, 1, '1 vertical lines');
                  is(scalar @{$gl->{H}->{lines}}, 4, '4 horizontal lines');
-my $track_v_abc = $gl->add_vertical_track();
-                 isa_ok($track_v_abc, 'Grid::Layout::Track', '$track_h_A is a Grid::Layout::Track');
+my ($track_v_abc,
+    $line_v_abc) = $gl->add_vertical_track();
+                 isa_ok($track_v_abc, 'Grid::Layout::Track', '$track_v_abc is a Grid::Layout::Track');
+                 isa_ok($line_v_abc , 'Grid::Layout::Line' , '$line_v_abc is a Grid::Layout::Line');
                  @size=$gl->size(); is_deeply(\@size, [1, 3], 'Size is 1x3');
                  $cell = $gl->cell(0, 0); isa_ok($cell, 'Grid::Layout::Cell', 'cell 0.0 is Cell');
                  $cell = $gl->cell(0, 1); isa_ok($cell, 'Grid::Layout::Cell', 'cell 0.1 is Cell');
