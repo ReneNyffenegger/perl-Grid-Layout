@@ -45,7 +45,6 @@ sub new { #_{
 =cut
 #_}
 
-
   my $class = shift;
 
   my $self = {};
@@ -80,15 +79,22 @@ The parameter C<'V'> or C<'H'> indiciates which componenents to initialize.
   $self->{$V_or_H}{tracks} = [];
   $self->{$V_or_H}{lines } = [];
 
+# A grid consists of at least one vertical and a horizontal line:
+  $self->_add_line($V_or_H);
+
 } #_}
+#_{ add-…-track
 sub add_vertical_track { #_{
 #_{ POD
 =head2 add_vertical_track
 
+    my $track_v = $gl->add_vertical_track(…);
+
+Adds a L<< vertical track|Grid::Layout::Track >> on the right side of the grid and returns it.
+
 =cut
 #_}
   my $self = shift;
-
 
   my $x = $self->size_x();
   for my $y (0 .. $self->size_y() -1) {
@@ -102,6 +108,10 @@ sub add_horizontal_track { #_{
 #_{ POD
 =head2 add_horizontal_track
 
+    my $track_h = $gl->add_horizontal_track(…);
+
+Adds a L<< horizontal track|Grid::Layout::Track >> at the bottom of the grid and returns it.
+
 =cut
 #_}
   my $self = shift;
@@ -114,9 +124,26 @@ sub add_horizontal_track { #_{
   return $self->_add_track('H');
 
 } #_}
+#_}
+sub add_horizontal_line { #_{
+#_{ POD
+=head2 add_horizontal_line
+
+    my $line = $gl->add_horizontal_line(…);
+
+=cut
+#_}
+
+  my $self   = shift;
+
+} #_}
 sub _add_track { #_{
 #_{ POD
 =head2 _add_track
+
+    my $track = $gl->_add_track($V_or_H);
+
+Internal function. Returns a vertical or horizontal L<< track|Grid::Layout::Track >>, depending on the value of C<< $V_or_H >> (whose should be either C<'V'> or C<'H'>).
 
 =cut
 #_}
@@ -126,7 +153,7 @@ sub _add_track { #_{
 
   my $new_track = Grid::Layout::Track->new($self, $V_or_H, scalar @{$self->{$V_or_H}->{tracks}});
 
-  $self->_add_line($V_or_H) unless @{$self->{$V_or_H}->{tracks}}; # An extra line (the first one) needs to be added for the first vertical and horizontal track.
+# $self->_add_line($V_or_H) unless @{$self->{$V_or_H}->{tracks}}; # An extra line (the first one) needs to be added for the first vertical and horizontal track.
   $self->_add_line($V_or_H);
 
   push @{$self->{$V_or_H}{tracks}}, $new_track;
@@ -217,7 +244,8 @@ Returns the horizontal size (x axis) in logical cell units.
 =cut
 #_}
   my $self = shift;
-  return scalar @{$self->{'V'}{tracks}};
+# return scalar @{$self->{'V'}{tracks}};
+  return scalar @{$self->{'V'}{lines}} -1;
 } #_}
 sub size_y { #_{
 #_{ POD
@@ -230,7 +258,8 @@ Returns the vertical size (y axis) in logical cell units.
 =cut
 #_}
   my $self = shift;
-  return scalar @{$self->{'H'}{tracks}};
+# return scalar @{$self->{'H'}{tracks}};
+  return scalar @{$self->{'H'}{lines}} -1;
 } #_}
 sub size { #_{
 #_{ POD

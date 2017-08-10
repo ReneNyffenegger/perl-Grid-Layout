@@ -5,3 +5,6 @@
  0.02  2017-08-08 -
 
        Improve POD
+
+       A grid minimally consists of one vertical and one
+       horizontal line

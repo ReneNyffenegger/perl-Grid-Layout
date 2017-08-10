@@ -14,8 +14,10 @@ is(Grid::Layout::VH_opposite('H'), 'V', 'Opposite of H is V');
 
 my $gl = Grid::Layout->new();                    isa_ok($gl        , 'Grid::Layout', '$gl is a Grid::Layout');
 
-is_deeply($gl->{V}{tracks}, [], '$gl->{V}{tracks} is an array reference');
-is_deeply($gl->{H}{tracks}, [], '$gl->{H}{tracks} is an array reference');
+is(ref($gl->{V}{tracks}), 'ARRAY', '$gl->{V}{tracks} is an array reference');
+is(ref($gl->{H}{tracks}), 'ARRAY', '$gl->{V}{tracks} is an array reference');
+# is_deeply($gl->{V}{tracks}, [], '$gl->{V}{tracks} is an array reference');
+# is_deeply($gl->{H}{tracks}, [], '$gl->{H}{tracks} is an array reference');
 
 my @size = $gl->size();
 
@@ -26,8 +28,8 @@ my $cell;
 $cell = $gl->cell(0, 0);
 is($cell, undef, 'cell 0.0 is undefined');
 
-is(scalar @{$gl->{V}->{lines}}, 0, '0 vertical lines');
-is(scalar @{$gl->{H}->{lines}}, 0, '0 horizontal lines');
+is(scalar @{$gl->{V}->{lines}}, 1, '1 vertical lines after creation');
+is(scalar @{$gl->{H}->{lines}}, 1, '1 horizontal lines after creation');
 
 # Add 4 horizontal and 3 vertical tracks:
 my $track_h_A    = $gl->add_horizontal_track();
@@ -36,7 +38,7 @@ my $track_h_A    = $gl->add_horizontal_track();
                  is($gl->size_y, 1, 'gl size_y is 0');
                  @size=$gl->size(); is_deeply(\@size, [0, 1], 'Size is 0x1');
                  $cell = $gl->cell(0, 0); is($cell, undef, 'cell 0.0 is undefined');
-                 is(scalar @{$gl->{V}->{lines}}, 0, '0 vertical lines');
+                 is(scalar @{$gl->{V}->{lines}}, 1, '1 vertical lines');
                  is(scalar @{$gl->{H}->{lines}}, 2, '2 horizontal lines');
                  is($track_h_A->{position}, 0, '$track_h_A->{position} == 0');
 my $track_h_B    = $gl->add_horizontal_track();
@@ -45,7 +47,7 @@ my $track_h_B    = $gl->add_horizontal_track();
                  is($gl->size_y, 2, 'gl size_y is 0');
                  @size=$gl->size(); is_deeply(\@size, [0, 2], 'Size is 0x2');
                  $cell = $gl->cell(0, 0); is($cell, undef, 'cell 0.0 is undefined');
-                 is(scalar @{$gl->{V}->{lines}}, 0, '0 vertical lines');
+                 is(scalar @{$gl->{V}->{lines}}, 1, '1 vertical lines');
                  is(scalar @{$gl->{H}->{lines}}, 3, '3 horizontal lines');
                  is($track_h_B->{position}, 1, '$track_h_B->{position} == 1');
 my $track_h_C  = $gl->add_horizontal_track();
@@ -53,7 +55,7 @@ my $track_h_C  = $gl->add_horizontal_track();
                  is($gl->size_x, 0, 'gl size_x is 3');
                  is($gl->size_y, 3, 'gl size_y is 0');
                  $cell = $gl->cell(0, 0); is($cell, undef, 'cell 0.0 is undefined');
-                 is(scalar @{$gl->{V}->{lines}}, 0, '0 vertical lines');
+                 is(scalar @{$gl->{V}->{lines}}, 1, '1 vertical lines');
                  is(scalar @{$gl->{H}->{lines}}, 4, '4 horizontal lines');
 my $track_v_abc = $gl->add_vertical_track();
                  isa_ok($track_v_abc, 'Grid::Layout::Track', '$track_h_A is a Grid::Layout::Track');

@@ -27,6 +27,8 @@ our $VERSION = 0.01;
 A C<< Grid::Layout::Line >> is an indefinitismal thin line that runs either
 horizontally or vertically from one end of a grid to the other.
 
+The 
+
 Of course, when the grid is rendered, the line might become thicker than indefinitismal thin (think border).
 
 =cut
@@ -48,7 +50,7 @@ This function should not be called by a user. It is called by L<< Grid::Layout/_
 #_}
 
   my $class  = shift;
-  my $V_or_H = shift;
+  my $V_or_H = shift; # TODO not used...
 
   my $self = {};
   bless $self, $class;
@@ -70,4 +72,3 @@ copy of the full license at: L<http://www.perlfoundation.org/artistic_license_2_
 #_}
 
 'tq84';
-
