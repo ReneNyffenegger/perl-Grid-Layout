@@ -8,3 +8,5 @@
 
        A grid minimally consists of one vertical and one
        horizontal line
+
+       Adding tracks returns also the newly created line.

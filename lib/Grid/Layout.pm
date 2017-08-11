@@ -133,17 +133,94 @@ Otherwise, it returns the newly created L<Grid::Layout::Track>.
 
 } #_}
 #_}
+sub get_horizontal_line { #_{
+#_{ POD
+=head2 new
+
+    my $logical_width = 5;
+    my $fourth_horizontal_line = $gl->get_horizontal_line($logical_width);
+
+Returns the horizontal line that is C<< $logical_width >> units from the I<< zero-line >> apart.
+
+=cut
+#_}
+
+  my $self     = shift;
+  my $position = shift;
+
+  return $self->_get_line('H', $position);
+
+} #_}
+sub get_vertical_line { #_{
+#_{ POD
+=head2 new
+
+    my $logical_width = 4;
+    my $third_horizontal_line = $gl->get_horizontal_line($logical_width);
+
+Returns the vertical line that is C<< $logical_width >> units from the I<< zero-line >> apart.
+
+=cut
+#_}
+  
+  my $self     = shift;
+  my $position = shift;
+  return $self->_get_line('V', $position);
+
+} #_}
+sub _get_line {
+  my $self     = shift;
+  my $V_or_H   = shift;
+  my $position = shift;
+
+  return ${$self->{$V_or_H}{lines}}[$position];
+
+}
 sub add_horizontal_line { #_{
 #_{ POD
 =head2 add_horizontal_line
 
-    my $line = $gl->add_horizontal_line(…);
+    my  $new_line              = $gl->add_horizontal_line(…);
+    my ($new_line, $new_track) = $gl->add_horizontal_line(…);
+
+Adds a horizontal L<< line|Grid::Layout::Line >> (and by implication also a horizontal
+L<< track||Grid::Layout::Track >>).
+
+If called in list contect, it returns both, if called in scalar contect, it returns the
+new line only.
 
 =cut
 #_}
 
   my $self   = shift;
 
+  my ($new_track, $new_line) = $self->add_horizontal_track(@_);
+
+  return $new_line, $new_track if wantarray;
+  return $new_line;
+
+} #_}
+sub add_vertical_line { #_{
+#_{ POD
+=head2 add_vertical_line
+
+    my  $new_line              = $gl->add_vertical_line(…);
+    my ($new_line, $new_track) = $gl->add_vertical_line(…);
+
+Adds a vertical L<< line|Grid::Layout::Line >> (and by implication also a vertical
+L<< track||Grid::Layout::Track >>).
+
+If called in list contect, it returns both, if called in scalar contect, it returns the
+new line only.
+
+=cut
+#_}
+  my $self   = shift;
+
+  my ($new_track, $new_line) = $self->add_vertical_track(@_);
+
+  return $new_line, $new_track if wantarray;
+  return $new_line;
 } #_}
 sub _add_track { #_{
 #_{ POD
@@ -184,7 +261,9 @@ Internal function, called by L</_add_track>, to add a vertical or horizontal L<<
   my $self   = shift;
   my $V_or_H = shift;
 
-  my $new_line = Grid::Layout::Line->new($self, $V_or_H);
+# print "\n\n  ***\n    ", scalar @{$self->{$V_or_H}->{lines}}, "\n\n    *****\n";
+
+  my $new_line = Grid::Layout::Line->new($self, $V_or_H, scalar @{$self->{$V_or_H}->{lines}});
 
   push @{$self->{$V_or_H}->{lines}}, $new_line;
 
@@ -195,6 +274,25 @@ sub area { #_{
 #_{ POD
 =head2 area
 
+    $gl->area(…)
+
+Create an L<< area|Grid::Layout::Area >>
+
+=head3 creating an area from lines
+
+    my $vertical_line_from    = $gl->add_vertical_line(…);
+    my $horizontal_line_from  = $gl->add_vertical_line(…);
+
+    my $vertical_line_to      = $gl->add_vertical_line(…);
+    my $horizontal_line_to    = $gl->add_vertical_line(…);
+
+    my $area = $gl->area (
+      $vertical_line_from, $horizontal_line_from,
+      $vertical_line_to   ,$horizontal_line_to
+    );
+
+=head3 creating an area from tracks
+
     my $vertical_track_from   = $gl->add_vertical_track(…);
     my $horizontal_track_from = $gl->add_vertical_track(…);
 
@@ -204,9 +302,9 @@ sub area { #_{
     my $area = $gl->area($vertical_track_from, $horizontal_track_from, $vertical_track_to, $vertical_track_to);
 
 
-Define an L<< area|Grid::Layout::Area >> bound by the four Tracks;
+Define an L<< area|Grid::Layout::Area >> bound by the four tracks. Both the from and the to tracks are included.
 
-An area that lies on I<one> L<< track|Grid::Layout::Track >> only can be created with
+An area that lies on only I<one> L<< track|Grid::Layout::Track >> can be created with
 L<< Grid::Layout::Track/area >>.
 
 =cut
@@ -214,36 +312,45 @@ L<< Grid::Layout::Track/area >>.
   
   my $self = shift;
 
-  my $track_v_from = shift;
-  my $track_h_from = shift;
-  my $track_v_to   = shift;
-  my $track_h_to   = shift;
+  if ($_[0]->isa('Grid::Layout::Track')) { #_{
 
-  croak 'track_v_from is not a Grid::Layout::Track' unless $track_v_from->isa('Grid::Layout::Track');
-  croak 'track_v_to   is not a Grid::Layout::Track' unless $track_v_to  ->isa('Grid::Layout::Track');
-  croak 'track_h_from is not a Grid::Layout::Track' unless $track_h_from->isa('Grid::Layout::Track');
-  croak 'track_h_to   is not a Grid::Layout::Track' unless $track_h_to  ->isa('Grid::Layout::Track');
+     my $track_v_from = shift;
+     my $track_h_from = shift;
+     my $track_v_to   = shift;
+     my $track_h_to   = shift;
+   
+     croak 'track_v_from is not a Grid::Layout::Track' unless $track_v_from->isa('Grid::Layout::Track');
+     croak 'track_v_to   is not a Grid::Layout::Track' unless $track_v_to  ->isa('Grid::Layout::Track');
+     croak 'track_h_from is not a Grid::Layout::Track' unless $track_h_from->isa('Grid::Layout::Track');
+     croak 'track_h_to   is not a Grid::Layout::Track' unless $track_h_to  ->isa('Grid::Layout::Track');
+   
+     croak 'track_v_from is not a vertical' unless $track_v_from->{V_or_H} eq 'V';
+     croak 'track_v_to   is not a vertical' unless $track_v_to  ->{V_or_H} eq 'V';
+     croak 'track_h_from is not a vertical' unless $track_h_from->{V_or_H} eq 'H';
+     croak 'track_h_to   is not a vertical' unless $track_h_to  ->{V_or_H} eq 'H';
+   
+     for my $x ($track_v_from->{position} .. $track_v_to->{position}) {
+     for my $y ($track_h_from->{position} .. $track_h_to->{position}) {
+       if ($self->cell($x, $y)->{area}) {
+          croak "cell $x/$y already belongs to an area";
+       }
+     }}
+   
+     my $area = Grid::Layout::Area->new($track_v_from, $track_h_from, $track_v_to, $track_h_to);
+   
+     for my $x ($track_v_from->{position} .. $track_v_to->{position}) {
+     for my $y ($track_h_from->{position} .. $track_h_to->{position}) {
+       $self->cell($x, $y)->{area}= $area;
+     }}
 
-  croak 'track_v_from is not a vertical' unless $track_v_from->{V_or_H} eq 'V';
-  croak 'track_v_to   is not a vertical' unless $track_v_to  ->{V_or_H} eq 'V';
-  croak 'track_h_from is not a vertical' unless $track_h_from->{V_or_H} eq 'H';
-  croak 'track_h_to   is not a vertical' unless $track_h_to  ->{V_or_H} eq 'H';
+     return $area;
+  } #_}
+  elsif ($_[0]->isa('Grid::Layout::Line')) { #_{
 
-  for my $x ($track_v_from->{position} .. $track_v_to->{position}) {
-  for my $y ($track_h_from->{position} .. $track_h_to->{position}) {
-    if ($self->cell($x, $y)->{area}) {
-       croak "cell $x/$y already belongs to an area";
-    }
-  }}
+    print "TODO\n";
 
-  my $area = Grid::Layout::Area->new($track_v_from, $track_h_from, $track_v_to, $track_h_to);
+  } #_}
 
-  for my $x ($track_v_from->{position} .. $track_v_to->{position}) {
-  for my $y ($track_h_from->{position} .. $track_h_to->{position}) {
-    $self->cell($x, $y)->{area}= $area;
-  }}
-
-  return $area;
 
 } #_}
 sub size_x { #_{
@@ -257,7 +364,6 @@ Returns the horizontal size (x axis) in logical cell units.
 =cut
 #_}
   my $self = shift;
-# return scalar @{$self->{'V'}{tracks}};
   return scalar @{$self->{'V'}{lines}} -1;
 } #_}
 sub size_y { #_{
@@ -271,7 +377,6 @@ Returns the vertical size (y axis) in logical cell units.
 =cut
 #_}
   my $self = shift;
-# return scalar @{$self->{'H'}{tracks}};
   return scalar @{$self->{'H'}{lines}} -1;
 } #_}
 sub size { #_{
@@ -409,6 +514,9 @@ Returns the C<< $position >>th line in vertical or horizontal direction.
   my $self     = shift;
   my $V_or_H   = shift;
   my $position = shift;
+
+  croak 'need V or H'     unless $V_or_H eq 'V' or $V_or_H eq 'H';
+  croak 'need a position' unless $position =~ /^\d+$/;
 
   return ${$self->{$V_or_H}->{lines}}[$position];
 

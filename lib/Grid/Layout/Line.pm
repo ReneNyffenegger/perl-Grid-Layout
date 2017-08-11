@@ -49,12 +49,40 @@ This function should not be called by a user. It is called by L<< Grid::Layout/_
 =cut
 #_}
 
-  my $class  = shift;
-  my $V_or_H = shift; # TODO not used...
+  my $class       = shift;
+  my $grid_layout = shift;
+  my $V_or_H      = shift; # TODO not used...
+  my $position    = shift;
+
+  croak "need a Grid::Layout" unless $grid_layout->isa('Grid::Layout');
+  croak "need a V or an H"    unless $V_or_H eq 'V' or $V_or_H eq 'H';
+  croak "need a position"     unless $position =~ /^\d+$/;
 
   my $self = {};
   bless $self, $class;
+
+  $self->{grid_layout} = $grid_layout;
+  $self->{V_or_H     } = $V_or_H;
+  $self->{position   } = $position;
   return $self;
+
+} #_}
+sub _previous_track { #_{
+
+  my $self = shift;
+  
+  croak 'Cannot return previous track, I am line zero' unless $self->{position};
+
+  return $self->{grid_layout}->_line($self->{V_or_H}, $self->{position}-1);
+
+} #_}
+sub _next_track { #_{
+
+  my $self = shift;
+
+  croak 'Cannot return next track, I am last line' unless $self->{position} < $self->{grid_layout}->_size($self->{V_or_H});
+
+  return $self->{grid_layout}->_line($self->{V_or_H}, $self->{position});
 
 } #_}
 #_}
