@@ -14,3 +14,7 @@ README.md
 t/01-load.t
 t/02-create-grid.t
 t/02-grid-expected.html
+t/03-add-line.t
+t/03-grid-expected.html
+t/04-area-on-track.t
+t/04-grid-expected.html

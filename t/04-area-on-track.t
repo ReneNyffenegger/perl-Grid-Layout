@@ -1,7 +1,8 @@
+#!/usr/bin/perl
 use strict;
 use warnings;
 
-use Test::Simple tests => 3;
+use Test::Simple tests => 1;
 use Test::More;
 use Test::Files;
 
@@ -10,22 +11,19 @@ use Grid::Layout::Render;
 
 my $gl = Grid::Layout->new();
 
-my $v_1 = $gl->add_vertical_line  ();
-my $h_1 = $gl->add_horizontal_line();
+my $v_l_1 = $gl->add_vertical_line   ();
+my $v_l_2 = $gl->add_vertical_line   ();
+my $v_l_3 = $gl->add_vertical_line   ();
+my $v_t_4 = $gl->add_vertical_track  ();
+my $v_t_5 = $gl->add_vertical_track  ();
 
-my $v_2 = $gl->add_vertical_line  ();
-my $h_2 = $gl->add_horizontal_line();
+my $h_l_1 = $gl->add_horizontal_line ();
+my $h_t_2 = $gl->add_horizontal_track();
+my $h_l_3 = $gl->add_horizontal_line ();
+my $h_l_4 = $gl->add_horizontal_line ();
 
-my $v_3 = $gl->add_vertical_line  ();
-my $v_4 = $gl->add_vertical_line  ();
-
-my $h_3 = $gl->add_horizontal_line();
-my $h_4 = $gl->add_horizontal_line();
-
-my $area_1 = $gl->area($v_2, $h_2, $v_3, $h_4);
-my $area_2 = $gl->area($gl->line_x(0), $h_1, $v_3, $h_2);
-isa_ok($area_1, 'Grid::Layout::Area');
-isa_ok($area_2, 'Grid::Layout::Area');
+$h_t_2->area($v_l_1, $v_t_4);
+$v_t_5->area($h_l_1, $h_l_3);
 
 my $text = '';
 my $rendered = Grid::Layout::Render::top_to_bottom_left_to_right(
@@ -63,7 +61,7 @@ my $rendered = Grid::Layout::Render::top_to_bottom_left_to_right(
   }
 );
 
-open (my $out, '>', 't/03-grid-gotten.html');
+open (my $out, '>', 't/04-grid-gotten.html');
 print $out "<html>
 
 <table border=1>
@@ -76,4 +74,4 @@ $text
 ";
 close $out;
 
-compare_ok('t/03-grid-gotten.html', 't/03-grid-expected.html');
+ok(1);
