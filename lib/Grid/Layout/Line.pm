@@ -85,6 +85,26 @@ sub _next_track { #_{
   return $self->{grid_layout}->_track($self->{V_or_H}, $self->{position});
 
 } #_}
+sub previous_line { #_{
+
+  my $self = shift;
+  my $dist = shift // 1;
+  
+  croak "Cannot return previous line $dist, I am line $self->{position}" unless $self->{position}-$dist >= 0;
+
+  return $self->{grid_layout}->_line($self->{V_or_H}, $self->{position}-$dist);
+
+} #_}
+sub next_line { #_{
+
+  my $self = shift;
+  my $dist = shift // 1;
+
+  croak "Cannot return next line $dist, I am line $self->{position} and the size is " . $self->{grid_layout}->_size($self->{V_or_H}) unless $self->{position}+$dist <= $self->{grid_layout}->_size($self->{V_or_H});
+
+  return $self->{grid_layout}->_line($self->{V_or_H}, $self->{position}+$dist);
+
+} #_}
 #_}
 #_{ POD: Copyright
 

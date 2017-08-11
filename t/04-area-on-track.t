@@ -74,4 +74,4 @@ $text
 ";
 close $out;
 
-ok(1);
+compare_ok('t/04-grid-gotten.html', 't/04-grid-expected.html');
