@@ -73,7 +73,7 @@ sub _previous_track { #_{
   
   croak 'Cannot return previous track, I am line zero' unless $self->{position};
 
-  return $self->{grid_layout}->_line($self->{V_or_H}, $self->{position}-1);
+  return $self->{grid_layout}->_track($self->{V_or_H}, $self->{position}-1);
 
 } #_}
 sub _next_track { #_{
@@ -82,7 +82,7 @@ sub _next_track { #_{
 
   croak 'Cannot return next track, I am last line' unless $self->{position} < $self->{grid_layout}->_size($self->{V_or_H});
 
-  return $self->{grid_layout}->_line($self->{V_or_H}, $self->{position});
+  return $self->{grid_layout}->_track($self->{V_or_H}, $self->{position});
 
 } #_}
 #_}

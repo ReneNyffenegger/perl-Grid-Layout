@@ -168,14 +168,14 @@ Returns the vertical line that is C<< $logical_width >> units from the I<< zero-
   return $self->_get_line('V', $position);
 
 } #_}
-sub _get_line {
+sub _get_line { #_{
   my $self     = shift;
   my $V_or_H   = shift;
   my $position = shift;
 
   return ${$self->{$V_or_H}{lines}}[$position];
 
-}
+} #_}
 sub add_horizontal_line { #_{
 #_{ POD
 =head2 add_horizontal_line
@@ -312,7 +312,9 @@ L<< Grid::Layout::Track/area >>.
   
   my $self = shift;
 
+  print "AREA\n";
   if ($_[0]->isa('Grid::Layout::Track')) { #_{
+     print "IS Track\n";
 
      my $track_v_from = shift;
      my $track_h_from = shift;
@@ -346,11 +348,37 @@ L<< Grid::Layout::Track/area >>.
      return $area;
   } #_}
   elsif ($_[0]->isa('Grid::Layout::Line')) { #_{
+     print "IS Line\n";
 
-    print "TODO\n";
+     my $line_v_from = shift;
+     my $line_h_from = shift;
+     my $line_v_to   = shift;
+     my $line_h_to   = shift;
+
+        print($line_v_from, "\n");
+        print($line_h_from, "\n");
+        print($line_v_to  , "\n");
+        print($line_h_to  , "\n");
+
+        print "Strawberry\n";
+        $line_v_from->_next_track;
+        $line_h_from->_next_track;
+        $line_v_to->_previous_track;
+        $line_h_to->_previous_track;
+   
+     croak 'line_v_from is not a Grid::Layout::Line' unless $line_v_from->isa('Grid::Layout::Line');
+     croak 'line_v_to   is not a Grid::Layout::Line' unless $line_v_to  ->isa('Grid::Layout::Line');
+     croak 'line_h_from is not a Grid::Layout::Line' unless $line_h_from->isa('Grid::Layout::Line');
+     croak 'line_h_to   is not a Grid::Layout::Line' unless $line_h_to  ->isa('Grid::Layout::Line');
+   
+
+     print "---->\n";
+    return $self->area($line_v_from->_next_track    , $line_h_from->_next_track,
+                       $line_v_to  ->_previous_track, $line_h_to  ->_previous_track);
 
   } #_}
 
+  croak "need 4 Grid::Layout::Track's or 4 Grid::Layout::Line's";
 
 } #_}
 sub size_x { #_{
@@ -519,6 +547,27 @@ Returns the C<< $position >>th line in vertical or horizontal direction.
   croak 'need a position' unless $position =~ /^\d+$/;
 
   return ${$self->{$V_or_H}->{lines}}[$position];
+
+} #_}
+sub _track { #_{
+#_{ POD
+=head2 _track
+
+    my $track = $gl->_track($V_or_H, $position)
+
+Returns the C<< $position >>th track in vertical or horizontal direction.
+
+=cut
+#_}
+
+  my $self     = shift;
+  my $V_or_H   = shift;
+  my $position = shift;
+
+  croak 'need V or H'     unless $V_or_H eq 'V' or $V_or_H eq 'H';
+  croak 'need a position' unless $position =~ /^\d+$/;
+
+  return ${$self->{$V_or_H}->{tracks}}[$position];
 
 } #_}
 sub VH_opposite { #_{

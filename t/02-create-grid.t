@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::Simple tests => 296;
+use Test::Simple tests => 297;
 use Test::More;
 use Test::Exception;
 use Test::Files;
@@ -86,7 +86,10 @@ my ($track_h_C,
                  is(scalar @{$gl->{H}->{lines}}, 4, '4 horizontal lines');
                  is($line_h_C, $gl->line_y(3));
                  throws_ok { $line_h_C->_next_track} qr{Cannot return next track. I am last line};
- 
+
+                 my $line_h_C_prev_track = $line_h_C->_previous_track;
+                 isa_ok($line_h_C_prev_track, 'Grid::Layout::Track');
+
 my ($track_v_abc,
     $line_v_abc) = $gl->add_vertical_track();
                  isa_ok($track_v_abc, 'Grid::Layout::Track', '$track_v_abc is a Grid::Layout::Track');
