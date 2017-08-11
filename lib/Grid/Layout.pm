@@ -312,9 +312,7 @@ L<< Grid::Layout::Track/area >>.
   
   my $self = shift;
 
-  print "AREA\n";
   if ($_[0]->isa('Grid::Layout::Track')) { #_{
-     print "IS Track\n";
 
      my $track_v_from = shift;
      my $track_h_from = shift;
@@ -348,7 +346,6 @@ L<< Grid::Layout::Track/area >>.
      return $area;
   } #_}
   elsif ($_[0]->isa('Grid::Layout::Line')) { #_{
-     print "IS Line\n";
 
      my $line_v_from = shift;
      my $line_h_from = shift;
