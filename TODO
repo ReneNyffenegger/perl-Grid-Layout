@@ -1,0 +1,1 @@
+$track -> area($line, $line); # should croak because it doesn't return an area, but a line segment.
