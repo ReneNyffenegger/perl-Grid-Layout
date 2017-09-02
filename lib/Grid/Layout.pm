@@ -354,12 +354,6 @@ L<< Grid::Layout::Track/area >>.
      my $line_v_to   = shift;
      my $line_h_to   = shift;
 
-        print($line_v_from, "\n");
-        print($line_h_from, "\n");
-        print($line_v_to  , "\n");
-        print($line_h_to  , "\n");
-
-        print "Strawberry\n";
         $line_v_from->_next_track;
         $line_h_from->_next_track;
         $line_v_to->_previous_track;
@@ -369,9 +363,7 @@ L<< Grid::Layout::Track/area >>.
      croak 'line_v_to   is not a Grid::Layout::Line' unless $line_v_to  ->isa('Grid::Layout::Line');
      croak 'line_h_from is not a Grid::Layout::Line' unless $line_h_from->isa('Grid::Layout::Line');
      croak 'line_h_to   is not a Grid::Layout::Line' unless $line_h_to  ->isa('Grid::Layout::Line');
-   
 
-     print "---->\n";
     return $self->area($line_v_from->_next_track    , $line_h_from->_next_track,
                        $line_v_to  ->_previous_track, $line_h_to  ->_previous_track);
 
