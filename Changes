@@ -2,7 +2,7 @@
 
        Start on initial version
 
- 0.02  2017-08-08 -
+ 0.02  2017-08-08 - 2017-09-02
 
        Improve POD
          - Typos
@@ -21,3 +21,5 @@
         - chmod 755
 
        t/01-load.t: isa_ok();
+
+       Use MANIFEST.SKIP rather than ignore.txt

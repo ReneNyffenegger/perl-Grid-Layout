@@ -1,8 +1,0 @@
-Makefile
-Makefile.old
-blib/
-Grid-Layout-*.tar.gz
-t/02-grid-gotten.html
-t/03-grid-gotten.html
-t/04-grid-gotten.html
-MANIFEST.bak
