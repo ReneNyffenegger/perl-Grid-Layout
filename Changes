@@ -15,3 +15,7 @@
        Adding tracks returns also the newly created line.
 
        $track->area($line_from, $line_to);
+
+       Makefile.PL
+        - She bang
+        - chmod 755
