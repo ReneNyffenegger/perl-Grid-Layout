@@ -27,3 +27,5 @@
  0.03  2017-09-03
 
        Still more improving POD
+
+       Synchronize the $VERSION in the *.pm

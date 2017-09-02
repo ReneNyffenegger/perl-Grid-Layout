@@ -15,7 +15,7 @@ use Carp;
 use Grid::Layout;
 
  #_}
-our $VERSION = $Grid::Layout::VERSION;
+our $VERSION = 0.03;
 #_{ Synopsis
 
 =head1 SYNOPSIS
