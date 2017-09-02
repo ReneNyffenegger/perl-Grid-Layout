@@ -22,7 +22,7 @@ our $VERSION = $Grid::Layout::VERSION;
 
 =head1 DESCRIPTION
 
-a C<< Grid::Layout::Track >> is the space between to adjacent L<< Grid::Layout::Line >>s.
+a C<< Grid::Layout::Track >> is the space between to adjacent L<< lines|Grid::Layout::Line >>.
 
 Usually, a horizontal track is referred to as a row, a vertical track as a column.
 
