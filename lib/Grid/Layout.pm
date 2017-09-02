@@ -95,8 +95,8 @@ sub add_vertical_track { #_{
 
 Adds a L<< vertical track|Grid::Layout::Track >> on the right side of the grid and returns it.
 
-If called in I<list context>, it returns the newly created L<Grid::Layout::Track> and L<Grid::Layout::Line>.
-Otherwise, it returns the newly created L<Grid::Layout::Track>.
+If called in I<list context>, it returns the newly created L<track|Grid::Layout::Track> and L<line|Grid::Layout::Line>.
+Otherwise, it returns the newly created L<track|Grid::Layout::Track>.
 
 =cut
 #_}
@@ -119,8 +119,8 @@ sub add_horizontal_track { #_{
 
 Adds a L<< horizontal track|Grid::Layout::Track >> at the bottom of the grid and returns it.
 
-If called in I<list context>, it returns the newly created L<Grid::Layout::Track> and L<Grid::Layout::Line>.
-Otherwise, it returns the newly created L<Grid::Layout::Track>.
+If called in I<list context>, it returns the newly created L<track|Grid::Layout::Track> and L<line|Grid::Layout::Line>.
+Otherwise, it returns the newly created L<track|Grid::Layout::Track>.
 
 =cut
 #_}
@@ -210,7 +210,7 @@ sub add_vertical_line { #_{
     my ($new_line, $new_track) = $gl->add_vertical_line(…);
 
 Adds a vertical L<< line|Grid::Layout::Line >> (and by implication also a vertical
-L<< track||Grid::Layout::Track >>).
+L<< track|Grid::Layout::Track >>).
 
 If called in list contect, it returns both, if called in scalar contect, it returns the
 new line only.
@@ -255,7 +255,7 @@ sub _add_line { #_{
 
     $self->_add_line($V_or_H);
 
-Internal function, called by L</_add_track>, to add a vertical or horizontal L<< Grid::Layout::Line >>.
+Internal function, called by L</_add_track>, to add a vertical or horizontal L<< line|Grid::Layout::Line >>.
 
 =cut
 #_}
@@ -447,7 +447,7 @@ sub cell { #_{
     my $cell_1 = $gl->cell($x, $y);
     my $cell_2 = $gl->cell($track_v, $track_h);
 
-Return the L<< Grid::Layout::Cell >> at horizontal position C<$x> and vertical position C<$y> or where C<$track_v> and C<$track_h> intersects.
+Return the L<< cell|Grid::Layout::Cell >> at horizontal position C<$x> and vertical position C<$y> or where C<$track_v> and C<$track_h> intersects.
 
 =cut
 #_}
