@@ -19,7 +19,7 @@ use Grid::Layout::Cell;
 use Grid::Layout::Line;
 use Grid::Layout::Track;
  #_}
-our $VERSION = 0.02;
+our $VERSION = 0.03;
 #_{ Synopsis
 
 =head1 SYNOPSIS

@@ -102,7 +102,7 @@ Only applicable if the track is vertical (C<< $self->{V_or_H} eq 'V' >>).
 } #_}
 sub line_above { #_{
 #_{ POD
-=head2 line_left
+=head2 line_above
 
 Returns the line above the track.
 
