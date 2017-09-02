@@ -1,7 +1,9 @@
 #_{ Encoding and name
 =encoding utf8
 =head1 NAME
+
 Grid::Layout - Create grid based layouts.
+
 =cut
 #_}
 package Grid::Layout;
@@ -596,6 +598,15 @@ Copyright © 2017 René Nyffenegger, Switzerland. All rights reserved.
 This program is free software; you can redistribute it and/or modify it
 under the terms of the the Artistic License (2.0). You may obtain a
 copy of the full license at: L<http://www.perlfoundation.org/artistic_license_2_0>
+
+=cut
+
+#_}
+#_{ POD: Source Code
+
+=head1 Source Code
+
+The source code is on L<< github|https://github.com/ReneNyffenegger/perl-Grid-Layout >>. Meaningful pull requests are welcome.
 
 =cut
 
