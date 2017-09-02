@@ -19,3 +19,5 @@
        Makefile.PL
         - She bang
         - chmod 755
+
+       t/01-load.t: isa_ok();
